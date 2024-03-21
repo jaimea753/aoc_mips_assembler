@@ -24,7 +24,7 @@ int add_to_list(struct LABEL_LIST *list, char *label, unsigned int num_ins, int 
         if (!allow_duplicates) {
             node = list->init;
             while (node) {
-                if (!strcmp(node->label, label)) return 1;
+                if (!strcasecmp(node->label, label)) return 1;
                 node = node->next;
             }
         }

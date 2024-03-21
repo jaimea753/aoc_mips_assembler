@@ -1,5 +1,6 @@
 %{
 #include <stdio.h>
+#include <string.h>
 
 #include "MIPS.h"
 #include "label_list.h"
@@ -147,7 +148,7 @@ void solve_labels() {
     while (ptr1) {
         ptr2 = list_labels.init;
         while (ptr2) {
-            if (!strcmp(ptr1->label, ptr2->label)) {
+            if (!strcasecmp(ptr1->label, ptr2->label)) {
                 int diff = ptr2->num_ins - ptr1->num_ins - 1;
                 if (diff < 0) diff = 0xFFFF + 1 + diff;
                 MEM_I[ptr1->num_ins] += diff;

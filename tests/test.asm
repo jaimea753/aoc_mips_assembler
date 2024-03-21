@@ -13,6 +13,6 @@ init:   NOP
         beq r0, r0, hola
         jal r0, 5
         jal r0, -1
-hola:   ret r1
+hOla:   ret r1
 adios:  ret r1
         NOP
