@@ -8,13 +8,13 @@ struct LABEL_LIST {
 
 struct LABEL_LIST_NODE {
     char* label;
-    unsigned int num_ins;
+    unsigned long num_ins;
     struct LABEL_LIST_NODE *next;
 };
 
 void free_label_list(struct LABEL_LIST *list);
 
-int add_to_list(struct LABEL_LIST *list, char *label, unsigned int num_ins, int allow_duplicates);
+int add_to_list(struct LABEL_LIST *list, char *label, unsigned long num_ins, int allow_duplicates);
 
 void debug_print_label_list(struct LABEL_LIST *list);
 

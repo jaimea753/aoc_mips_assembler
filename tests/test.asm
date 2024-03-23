@@ -1,9 +1,9 @@
         .data
         @10 10
         @20 -5
-        .text
+        .code
 init:   NOP
-        add r1, r1, r2
+        add r1, r1, r2 ; Comments
         lw r1, 78(r0)
         sw r1, 0(r10)
         sub r1, r1, r2

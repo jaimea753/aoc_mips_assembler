@@ -10,7 +10,7 @@ PREFIX = /usr/local
 INSTALL = $(PREFIX)/bin
 FILE = mips_assembler
 
-install: compile
+install: 
 	install -m755 $(FILE) $(INSTALL)/$(FILE)
 
 uninstall:

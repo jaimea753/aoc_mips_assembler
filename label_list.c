@@ -14,7 +14,7 @@ void free_label_list(struct LABEL_LIST *list) {
     }
 }
 
-int add_to_list(struct LABEL_LIST *list, char *label, unsigned int num_ins, int allow_duplicates) {
+int add_to_list(struct LABEL_LIST *list, char *label, unsigned long num_ins, int allow_duplicates) {
     struct LABEL_LIST_NODE *node, *aux;
     if (!(list->init)) {
         list->init = (struct LABEL_LIST_NODE *)malloc(sizeof *(list->init));

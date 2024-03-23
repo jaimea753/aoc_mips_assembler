@@ -11,10 +11,10 @@
 // This doesn't scale well
 #define INSTRUCTION_SIZE LINES*INS_PER_LINE
 #define DATA_SIZE LINES*INS_PER_LINE
-unsigned int MEM_I[INSTRUCTION_SIZE] = {0};
-unsigned int MEM_D[DATA_SIZE] = {0};
+unsigned long MEM_I[INSTRUCTION_SIZE] = {0};
+unsigned long MEM_D[DATA_SIZE] = {0};
 
-void add_MEM_I(unsigned int ins) {
+void add_MEM_I(unsigned long ins) {
     static int numIns = 0;
     MEM_I[numIns++] = ins;
 }
@@ -24,16 +24,16 @@ void add_MEM_D(int pos, int data) {
     MEM_D[pos] = data;
 }
 
-unsigned int arit_ins(unsigned int aluop, unsigned int rd, unsigned int rs, unsigned int rt) {
+unsigned long arit_ins(unsigned int aluop, unsigned int rd, unsigned int rs, unsigned int rt) {
     return (ARIT_OPCODE << 26) + (rs << 21) + (rt << 16) + (rd << 11) + aluop;
 }
 
-unsigned int reg_reg_im_ins(unsigned int opcode, unsigned int rs, unsigned int rt, int im) {
+unsigned long reg_reg_im_ins(unsigned int opcode, unsigned int rs, unsigned int rt, int im) {
     if (im < 0) im = 0xFFFF + 1 + im;
     return (opcode << 26) + (rs << 21) + (rt << 16) + im;
 }
 
-unsigned int reg_ins(unsigned int opcode, unsigned int rt, int im) {
+unsigned long reg_ins(unsigned int opcode, unsigned int rt, int im) {
     if (im < 0) im = 0xFFFF + 1 + im;
     return (opcode << 26) + (rt << 16) + im;
 }
