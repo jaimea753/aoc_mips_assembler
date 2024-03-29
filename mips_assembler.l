@@ -18,6 +18,7 @@ char *parse_label(char *label) {
 
 [Rr][0-9]+ {yylval.num = atoi(&yytext[1]); return(REG);}
 "-"?[0-9]+ {yylval.im = atoi(yytext); return(IM);}
+"0x"[0-9A-Fa-f]+ {yylval.im = strtol(&yytext[2], NULL, 16); return(IM);}
 "@"[0-9]+ {yylval.num = atoi(&yytext[1]); return(D_ADDR);}
 
 [Nn][Oo][Pp] {return(NOP);}
