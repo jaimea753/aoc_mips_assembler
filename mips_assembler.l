@@ -46,6 +46,6 @@ char *parse_label(char *label) {
 "\n" {line_counter++; return(EOL);}
 " " {}
 "\t" {}
-. {fprintf(stderr, "%sError de reconocimiento en la línea: %d\n", yytext, line_counter + 1);}
+. {fprintf(stderr, "Error de reconocimiento en la línea: %d\n", line_counter + 1);}
 %%
 
