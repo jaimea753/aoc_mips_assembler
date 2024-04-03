@@ -32,6 +32,7 @@ char *parse_label(char *label) {
 [Jj][Aa][Ll] {return(JAL);}
 [Rr][Ee][Tt] {return(RET);}
 [Rr][Tt][Ee] {return(RTE);}
+[Uu][Nn][Dd][Ee][Ff] {return(UNDEF);}
 
 "(" {return (OP);}
 ")" {return (CP);}
@@ -40,10 +41,11 @@ char *parse_label(char *label) {
 ^[ ]*[A-Za-z0-9_]+":" {yylval.nombre = parse_label(yytext); return(LABEL);}
 [A-Za-z0-9_]+ {yylval.nombre = yytext; return(LABEL);}
 
-^[ ]*(;.*)?"\n" {line_counter++;} // Líneas en blanco
+^[ \t]*(;.*)?"\n" {line_counter++;} // Líneas en blanco
 ;.* {} // Comentarios
 "\n" {line_counter++; return(EOL);}
 " " {}
-. {fprintf(stderr, "Error de reconocimiento en la línea: %d\n", line_counter + 1);}
+"\t" {}
+. {fprintf(stderr, "%sError de reconocimiento en la línea: %d\n", yytext, line_counter + 1);}
 %%
 

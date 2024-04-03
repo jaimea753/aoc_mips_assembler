@@ -51,6 +51,7 @@ struct LABEL_LIST list_labels, list_ins;
 
 %token DATA_LABEL TEXT_LABEL
 %token NOP LW SW BEQ JAL RET RTE
+%token UNDEF
 %token ADD SUB AND OR
 %token REG IM LABEL
 %token EOL OP CP COMMA
@@ -99,6 +100,7 @@ ins : NOP { $$ = NOP_OPCODE << 26; }
                              }
     | RET REG {$$ = ((RET_OPCODE << 26) + ($2 << 21));}
     | RTE {$$ = RTE_OPCODE << 26;}
+    | UNDEF {$$ = 0xFFFFFFFF;}
     ;
 
 %%
