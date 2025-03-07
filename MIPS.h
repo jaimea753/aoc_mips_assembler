@@ -11,4 +11,3 @@ static int ADD_ALUOP = 0;
 static int SUB_ALUOP = 1;
 static int AND_ALUOP = 2;
 static int OR_ALUOP = 3;
-

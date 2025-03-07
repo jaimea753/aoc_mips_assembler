@@ -1,46 +1,57 @@
 %{
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
+#include <stdint.h>
 
 #include "MIPS.h"
 #include "label_list.h"
 
 #define INS_PER_LINE 8
 #define LINES 16 
-
-// This doesn't scale well
 #define INSTRUCTION_SIZE LINES*INS_PER_LINE
 #define DATA_SIZE LINES*INS_PER_LINE
-unsigned long MEM_I[INSTRUCTION_SIZE] = {0};
-unsigned long MEM_D[DATA_SIZE] = {0};
 
-void add_MEM_I(unsigned long ins) {
-    static int numIns = 0;
-    MEM_I[numIns++] = ins;
-}
-
-void add_MEM_D(int pos, int data) {
-    if (data < 0) data = 0xFFFFFFFF + 1 + data;
-    MEM_D[pos] = data;
-}
-
-unsigned long arit_ins(unsigned int aluop, unsigned int rd, unsigned int rs, unsigned int rt) {
-    return (ARIT_OPCODE << 26) + (rs << 21) + (rt << 16) + (rd << 11) + aluop;
-}
-
-unsigned long reg_reg_im_ins(unsigned int opcode, unsigned int rs, unsigned int rt, int im) {
-    if (im < 0) im = 0xFFFF + 1 + im;
-    return (opcode << 26) + (rs << 21) + (rt << 16) + im;
-}
-
-unsigned long reg_ins(unsigned int opcode, unsigned int rt, int im) {
-    if (im < 0) im = 0xFFFF + 1 + im;
-    return (opcode << 26) + (rt << 16) + im;
-}
+uint32_t MEM_I[INSTRUCTION_SIZE] = {0};
+uint32_t MEM_D[DATA_SIZE] = {0};
 
 int contador_ins = 0;
 struct LABEL_LIST list_labels, list_ins;
 
+void 
+add_MEM_I(uint32_t ins) 
+{
+    static int numIns = 0;
+    MEM_I[numIns++] = ins;
+}
+
+void 
+add_MEM_D(int pos, int data) 
+{
+    if (data < 0) data = (uint32_t)(0xFFFFFFFF + 1 + data);
+    MEM_D[pos] = data;
+}
+
+uint32_t 
+arit_ins(unsigned int aluop, unsigned int rd, unsigned int rs, unsigned int rt)
+{
+    return (ARIT_OPCODE << 26) + (rs << 21) + (rt << 16) + (rd << 11) + aluop;
+}
+
+uint32_t 
+reg_reg_im_ins(unsigned int opcode, unsigned int rs, unsigned int rt, int im) 
+{
+    if (im < 0) im = 0xFFFF + 1 + im;
+    return (opcode << 26) + (rs << 21) + (rt << 16) + im;
+}
+
+uint32_t 
+reg_ins(unsigned int opcode, unsigned int rt, int im) 
+{
+    if (im < 0) 
+        im = 0xFFFF + 1 + im;
+    return (opcode << 26) + (rt << 16) + im;
+}
 %}
 
 %union {
@@ -105,16 +116,23 @@ ins : NOP { $$ = NOP_OPCODE << 26; }
 
 %%
 
-void write_MEM_I() {
+void 
+write_MEM_I(void) 
+{
     FILE *fd = fopen("RAM-I.txt", "w");
     int count = 0;
     fprintf(fd, "(");
-    for (int i = 0; i < LINES; i++) {
-        for (int j = 0; j < INS_PER_LINE; j++) {
+    for (int i = 0; i < LINES; i++) 
+    {
+        for (int j = 0; j < INS_PER_LINE; j++) 
+        {
             fprintf(fd, "X\"%08X\"", MEM_I[count++]);
-            if (j == INS_PER_LINE - 1) {
-                if (i == LINES - 1) fprintf(fd, ");\n");
-                else fprintf(fd, ",\n");
+            if (j == INS_PER_LINE - 1) 
+            {
+                if (i == LINES - 1) 
+                    fprintf(fd, ");\n");
+                else 
+                    fprintf(fd, ",\n");
             }
             else fprintf(fd, ", ");
         }
@@ -122,15 +140,20 @@ void write_MEM_I() {
     fclose(fd);
 }
 
-void write_MEM_D() {
+void write_MEM_D(void)
+{
     FILE *fd = fopen("RAM-D.txt", "w");
     int count = 0;
     fprintf(fd, "(");
-    for (int i = 0; i < LINES; i++) {
-        for (int j = 0; j < INS_PER_LINE; j++) {
+    for (int i = 0; i < LINES; i++) 
+    {
+        for (int j = 0; j < INS_PER_LINE; j++) 
+        {
             fprintf(fd, "X\"%08X\"", MEM_D[count++]);
-            if (j == INS_PER_LINE - 1) {
-                if (i == LINES - 1) fprintf(fd, ");\n");
+            if (j == INS_PER_LINE - 1) 
+            {
+                if (i == LINES - 1) 
+                    fprintf(fd, ");\n");
                 else fprintf(fd, ",\n");
             }
             else fprintf(fd, ", ");
@@ -139,18 +162,24 @@ void write_MEM_D() {
     fclose(fd);
 }
 
-int yyerror(char *s) {
+int 
+yyerror(char *s) 
+{
     printf("\n%s\n", s);
     return 0;
 }
 
-void solve_labels() {
+void 
+solve_labels() 
+{
     struct LABEL_LIST_NODE *ptr1, *ptr2;
     ptr1 = list_ins.init;
     while (ptr1) {
         ptr2 = list_labels.init;
-        while (ptr2) {
-            if (!strcasecmp(ptr1->label, ptr2->label)) {
+        while (ptr2) 
+        {
+            if (!strcasecmp(ptr1->label, ptr2->label)) 
+            {
                 int diff = ptr2->num_ins - ptr1->num_ins - 1;
                 if (diff < 0) diff = 0xFFFF + 1 + diff;
                 MEM_I[ptr1->num_ins] += diff;
@@ -161,20 +190,14 @@ void solve_labels() {
     }
 }
 
-int main(int argc, char *argv[]) {
-    if (argc == 2) {
+int 
+main(int argc, char *argv[]) 
+{
+    if (argc == 2)
         stdin = fopen(argv[1], "r");
-    }
-    else if (argc != 1) {
+    else if (argc != 1)
         fprintf(stderr, "Error en los parámetros\n");
-    }
     yyparse();
-    /*
-    printf("Lista de etiquetas: \n");
-    debug_print_label_list(&list_labels);
-    printf("Lista de ins: \n");
-    debug_print_label_list(&list_ins);
-    */
     solve_labels();
     write_MEM_I();
     write_MEM_D();
